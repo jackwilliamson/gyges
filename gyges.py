@@ -4,6 +4,8 @@
 import pathlib
 import os
 
+from args_parser import GygesArgsParser
+
 class File:
     def __init__(self):
         self.name = ''
@@ -59,12 +61,8 @@ class MonthChest(FormatChest):
 
 
 
-# Two arguments
-# directory to clean
-# direction to yml
-# default to this directory for both
-
-# gyges_config.yml
+gyges_parser = GygesArgsParser()
+args = gyges_parser.parse_args()
 
 # Read a configuration
 rules = []
@@ -75,7 +73,7 @@ config = Config()
 
 # Actively Organizing
 #script_loc = pathlib.Path(__file__).parent.parent.absolute()
-hopper_loc = "."
+hopper_loc = args.hopper
 
 for file_loc in os.listdir(hopper_loc):
     #f = File()
@@ -85,7 +83,8 @@ for file_loc in os.listdir(hopper_loc):
 
 
 # Listening (watchdog)
-
+if args.watch:
+    print("WATCHING")
 
 # Run multiple different instances in each folder
 # Or iterate through each folder
