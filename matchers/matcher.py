@@ -3,15 +3,28 @@ class Matcher:
     def match(self, file):
         pass
 
+
+
 class DefaultMatcher(Matcher):
 
     def match(self, file):
         return True
 
+
+
 class ContainsMatcher(Matcher):
 
     def match(self, file):
         pass
+
+
+
+class RegexMatcher(Matcher):
+
+    def match(self, file):
+        pass
+
+
 
 class ExtensionMatcher(Matcher):
 
@@ -20,6 +33,8 @@ class ExtensionMatcher(Matcher):
 
     def match(self, file):
         return file.ext in self.exts
+
+
 
 class ImageMatcher(ExtensionMatcher):
 

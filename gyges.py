@@ -4,61 +4,11 @@
 import pathlib
 import os
 
+from file import File
+from config import Config, NoMatch
+from rules.rule import Rule
+
 from args_parser import GygesArgsParser
-
-class File:
-    def __init__(self):
-        self.name = ''
-        self.date_created = ''
-        self.date_last_modified = ''
-        self.ext = ''
-
-
-class Rule:
-    def __init__(self):
-        self.matcher = None
-        self.dest = None
-        self.inner_config = None
-
-    def set_inner_config(self, inner_config):
-        self.inner_config = inner_config
-
-    def match(self, file):
-        return self.matcher.match(file)
-
-class Config:
-    def __init__(self, rules=list([])):
-        self.rules = rules
-
-    def match_file(self, file):
-        for rule in self.rules:
-            if rule.match(file):
-                dest = rule.dest.get_loc(file)
-
-                # if folder doesn't exist yet, create it
-                if False:
-                    os.mkdir()
-                os.rename()
-
-class Chest:
-    def __init__(self, folder_name):
-        self.loc = folder_name
-
-    def get_loc(self, file):
-        return self.loc
-
-class FormatChest(Chest):
-
-    def __init__(self, folder_name_format):
-        pass
-
-
-    def get_loc(self, file):
-        pass
-
-class MonthChest(FormatChest):
-    pass
-
 
 
 gyges_parser = GygesArgsParser()
@@ -76,10 +26,22 @@ config = Config()
 hopper_loc = args.hopper
 
 for file_loc in os.listdir(hopper_loc):
-    #f = File()
-    #config.match_file(f)
-    print(file_loc)
+    f = File(file_loc)
 
+    try:
+        chest = config.match_file(f)
+
+        # Move file to new location
+        # if folder doesn't exist yet, create it
+        if os.path.exists(chest):
+            os.mkdir(chest)
+
+        final_loc = os.path.join(chest, file_loc)
+        os.rename(file_loc, final_loc)
+
+    except NoMatch:
+        # Don't move the file
+        pass
 
 
 # Listening (watchdog)
